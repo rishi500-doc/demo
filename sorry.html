@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  background: radial-gradient(circle at top, #2a1a2e, #0d0d16);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* 💖 Floating hearts */
+.heart {
+  position: absolute;
+  bottom: -20px;
+  color: rgba(255,105,135,0.25);
+  font-size: 20px;
+  animation: float 10s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+}
+
+/* 🦋 Butterfly */
+.butterfly {
+  position: absolute;
+  font-size: 22px;
+  pointer-events: none;
+  animation: flySlow var(--dur) ease-in-out forwards;
+}
+
+/* slow, curved, scattered motion */
+@keyframes flySlow {
+  0% {
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(calc(var(--x) / 2), -120px) scale(1) rotate(15deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--x), -260px) scale(1.2) rotate(-15deg);
+    opacity: 0;
+  }
+}
+
+/* LANDING */
+.landing {
+  text-align: center;
+  animation: fadeIn 1.2s ease;
+  z-index: 3;
+}
+
+.landing button {
+  padding: 14px 28px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #ff8fa3, #ff5f8a);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.landing button.blast {
+  animation: blast 0.4s ease;
+}
+
+@keyframes blast {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(0.95); }
+}
+
+/* CARD */
+.container {
+  display: none;
+  width: 90%;
+  max-width: 440px;
+  padding: 35px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+  animation: slideUp 1.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 { text-align: center; }
+
+.name {
+  text-align: center;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 120px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+button.action {
+  flex: 1;
+  padding: 13px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.try {
+  background: linear-gradient(135deg, #ff8fa3, #ff5f8a);
+  color: white;
+}
+
+.space {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.35);
+  color: white;
+}
+
+.music {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f672b2;
+  color: rgb(255, 255, 255);
+  border-radius: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating hearts -->
+<script>
+for (let i = 0; i < 25; i++) {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "❤";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = 7 + Math.random() * 6 + "s";
+  heart.style.fontSize = 14 + Math.random() * 20 + "px";
+  document.body.appendChild(heart);
+}
+</script>
+
+<!-- LANDING -->
+<div class="landing" id="landing">
+  <h1>Hey Ananya 💙</h1>
+  <button id="openBtn" onclick="openSorry(this)">
+    Tap to read something from me
+  </button>
+</div>
+
+<!-- APOLOGY -->
+<div class="container" id="sorryCard">
+  <h2>I’m Sorry</h2>
+  <div class="name">This is for you, <strong>Ananya</strong></div>
+
+  <div class="text" id="type"></div>
+
+  <div class="actions">
+    <button class="action try" onclick="forgive()">We can heal</button>
+    <button class="action space" onclick="needTime()">Take your time</button>
+  </div>
+
+  <div class="music" onclick="toggleMusic()">🎧 Play our song (Aval)</div>
+
+  <div class="footer">
+    Whatever you choose, I’ll respect it.
+  </div>
+</div>
+
+<audio id="song">
+  <source src="aval.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const message =
+  "I know I failed you. I’m not here to justify myself. I just want you to know that I see my mistakes clearly now — and I take full responsibility for everything.";
+
+let i = 0;
+let playing = false;
+const myWhatsAppNumber = "919751372227";
+
+function openSorry(btn) {
+  btn.classList.add("blast");
+  spawnButterflies(btn);
+
+  setTimeout(() => {
+    document.getElementById("landing").style.display = "none";
+    document.getElementById("sorryCard").style.display = "block";
+    typing();
+  }, 700);
+}
+
+function spawnButterflies(btn) {
+  const rect = btn.getBoundingClientRect();
+
+  for (let i = 0; i < 10; i++) {
+    const b = document.createElement("div");
+    b.className = "butterfly";
+    b.innerHTML = "🦋";
+
+    b.style.left = rect.left + rect.width / 2 + "px";
+    b.style.top = rect.top + "px";
+
+    b.style.setProperty("--x", `${Math.random() * 320 - 160}px`);
+    b.style.setProperty("--dur", `${3 + Math.random() * 2}s`);
+
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 5000);
+  }
+}
+
+function typing() {
+  if (i < message.length) {
+    document.getElementById("type").innerHTML += message.charAt(i);
+    i++;
+    setTimeout(typing, 30);
+  }
+}
+
+function forgive() {
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+  setTimeout(() => {
+    window.location.href =
+      `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent("I forgive you.")}`;
+  }, 300);
+}
+
+function needTime() {
+  alert("I understand. I’ll wait, without pressure.");
+}
+
+function toggleMusic() {
+  const song = document.getElementById("song");
+  playing ? song.pause() : song.play();
+  playing = !playing;
+}
+</script>
+
+</body>
+</html>
